@@ -2,7 +2,7 @@ name: miria
 description: Miria is Misskey Client for Mobile App.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.8+77
+version: 1.0.12+84
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -34,7 +34,7 @@ dependencies:
   shared_preferences: ^2.1.0
   badges: ^3.1.1
   flutter_secure_storage: ^8.0.0
-  google_fonts: ^4.0.4
+  google_fonts: ^6.1.0
   uuid: ^3.0.7
   file_picker: ^5.3.0
   package_info_plus: ^4.0.0
@@ -97,20 +97,7 @@ flutter:
 
   assets:
     - assets/
-    - assets/fonts/
     - assets/images/
-
-fonts:
-  - family: KosugiMaru
-    fonts:
-      - asset: assets/fonts/KosugiMaru-Regular.ttf
-        weight: 300
-      - asset: assets/fonts/KosugiMaru-Regular.ttf
-        weight: 400
-      - asset: assets/fonts/KosugiMaru-Regular.ttf
-        weight: 500
-      - asset: assets/fonts/KosugiMaru-Regular.ttf
-        weight: 600
 
 flutter_launcher_icons:
   android: "launcher_icon"

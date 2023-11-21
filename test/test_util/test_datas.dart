@@ -644,6 +644,99 @@ class TestData {
 }  
   '''));
 
+  /// Renote
+  static Note note6AsRenote = Note.fromJson(JSON5.parse('''
+{
+    id: '9lmbcrob34',
+    createdAt: '2023-11-03T15:07:13.307Z',
+    userId: '9byjlos32z',
+    user: {
+      id: '9byjlos32z',
+      name: 'そらいろ:role_reaction_shooter:',
+      username: 'shiosyakeyakini',
+      host: null,
+      avatarUrl: 'https://proxy.misskeyusercontent.com/avatar.webp?url=https%3A%2F%2Fs3.arkjp.net%2Fmisskey%2Fwebpublic-5e0b7842-adf7-4d29-b04a-a6e1faa4c3c4.png&avatar=1',
+      avatarBlurhash: 'eaN^k|,Rj%3x]_NM{t7t7jE^+tRjYR%s;MxMxIoogozxvRkRkRijE',
+      isBot: false,
+      isCat: true,
+      emojis: {},
+      onlineStatus: 'online',
+      badgeRoles: [
+        {
+          name: 'Patreon Miskist',
+          iconUrl: 'https://s3.arkjp.net/misskey/b03aec5c-4ef6-475d-b9ae-040531e77ff2.png',
+          displayOrder: 10,
+        },
+        {
+          name: 'Misskey Supporter',
+          iconUrl: 'https://s3.arkjp.net/misskey/dab4e89c-4ed1-4c06-918d-441db61dabaf.png',
+          displayOrder: 10,
+        },
+        {
+          name: 'FANBOX サポーター',
+          iconUrl: 'https://s3.arkjp.net/misskey/6e3b469e-16ed-4cc2-9098-215b441da254.png',
+          displayOrder: 0,
+        },
+      ],
+    },
+    text: null,
+    cw: null,
+    visibility: 'public',
+    localOnly: false,
+    reactionAcceptance: null,
+    renoteCount: 0,
+    repliesCount: 0,
+    reactions: {},
+    reactionEmojis: {},
+    fileIds: [],
+    files: [],
+    replyId: null,
+    renoteId: '9lmb9yahs7',
+    renote: {
+      id: '9lmb9yahs7',
+      createdAt: '2023-11-03T15:05:01.913Z',
+      userId: '9g0ku8jkft',
+      user: {
+        id: '9g0ku8jkft',
+        name: 'しゅうまい君（バカンス）',
+        username: 'shuumai',
+        host: null,
+        avatarUrl: 'https://proxy.misskeyusercontent.com/avatar.webp?url=https%3A%2F%2Fs3.arkjp.net%2Fmisskey%2Fe44afb80-e469-4ca2-bfd0-ddb8555e6a26.png&avatar=1',
+        avatarBlurhash: 'eoJThjozuNozo|kpj[ofaye.y=ayVFj[Vts;ayV@j[W;WDj[jEayoz',
+        isBot: true,
+        isCat: false,
+        emojis: {},
+        onlineStatus: 'unknown',
+        badgeRoles: [
+          {
+            name: 'Verified',
+            iconUrl: 'https://s3.arkjp.net/misskey/8df80984-86f9-4cc5-a289-1f6ab59c74b8.png',
+            displayOrder: 1000,
+          },
+        ],
+      },
+      text: 'どう考えてもおいしい冷める前のケースに使われてしまいそう」 （白いの自分が綺麗になると自分が36な',
+      cw: null,
+      visibility: 'public',
+      localOnly: false,
+      reactionAcceptance: null,
+      renoteCount: 2,
+      repliesCount: 0,
+      reactions: {
+        '❤': 1,
+        ':miria@.:': 44,
+        ':36kyoutei@.:': 5,
+      },
+      reactionEmojis: {},
+      fileIds: [],
+      files: [],
+      replyId: null,
+      renoteId: null,
+      myReaction: ':miria@.:',
+    },
+  }
+'''));
+
   // ドライブ（フォルダ）
   static DriveFolder folder1 = DriveFolder.fromJson(JSON5.parse(r'''
   {
@@ -1298,6 +1391,174 @@ class TestData {
 }  
   
   '''));
+
+  static UsersShowResponse usersShowResponse3AsRemoteUser =
+      UsersShowResponse.fromJson(JSON5.parse(r'''
+{
+  id: '9i08deo0vj',
+  name: 'あけおめらんか～',
+  username: 'akeome',
+  host: 'misskey.backspace.fm',
+  avatarUrl: 'https://misskey.io/identicon/akeome@misskey.backspace.fm',
+  avatarBlurhash: null,
+  isBot: true,
+  isCat: false,
+  instance: {
+    name: 'BackspaceKey',
+    softwareName: 'misskey',
+    softwareVersion: '2023.9.3-bsk-2.1.2',
+    iconUrl: 'https://s3.bskstorage.com/sakura/backspacekey/dc65f1fb-bc2b-4013-8f47-c6abd6df30ee.png',
+    faviconUrl: 'https://s3.bskstorage.com/sakura/backspacekey/125bc5c2-7e4b-409f-b50f-331dfb3e6bde.png',
+    themeColor: '#e4d440',
+  },
+  emojis: {},
+  onlineStatus: 'unknown',
+  url: 'https://misskey.backspace.fm/@akeome',
+  uri: 'https://misskey.backspace.fm/users/9i07ia9bf0',
+  movedTo: null,
+  alsoKnownAs: null,
+  createdAt: '2023-08-04T14:13:41.376Z',
+  updatedAt: '2023-11-01T15:02:05.677Z',
+  lastFetchedAt: '2023-11-01T14:04:12.561Z',
+  bannerUrl: null,
+  bannerBlurhash: null,
+  isLocked: false,
+  isSilenced: false,
+  isLimited: false,
+  isSuspended: false,
+  description: '毎日0:00に開かれる時間競技を観測するためのbotです。\n**/follow**でこちらからフォローします。',
+  location: null,
+  birthday: null,
+  lang: null,
+  fields: [
+    {
+      name: '集計ワード',
+      value: '"あけおめ","あけましておめでとうございます",":akeome:",":sakibashiri_oniichan_ni_akeome_shite_agerunoha_atashi_kurai_desho_heart:","はるさめずるずるひょるひょるほほほー",":harusame_zuruzuru:"',
+    },
+    {
+      name: '集計に使わせていただいております',
+      value: 'https://github.com/taichanNE30/yamag',
+    },
+    {
+      name: '集計部分の制作者',
+      value: '@taichan',
+    },
+    {
+      name: '中の人',
+      value: '@mirashiya37',
+    },
+  ],
+  followersCount: 0,
+  followingCount: 0,
+  notesCount: 197,
+  pinnedNoteIds: [],
+  pinnedNotes: [],
+  pinnedPageId: null,
+  pinnedPage: null,
+  publicReactions: true,
+  ffVisibility: 'public',
+  twoFactorEnabled: false,
+  usePasswordLessLogin: false,
+  securityKeys: false,
+  roles: [],
+  memo: null,
+  isFollowing: false,
+  isFollowed: false,
+  hasPendingFollowRequestFromYou: false,
+  hasPendingFollowRequestToYou: false,
+  isBlocking: false,
+  isBlocked: false,
+  isMuted: false,
+  isRenoteMuted: false,
+}
+'''));
+
+  static UsersShowResponse usersShowResponse3AsLocalUser =
+      UsersShowResponse.fromJson(JSON5.parse('''
+{
+  id: '9i07ia9bf0',
+  name: 'あけおめらんか～',
+  username: 'akeome',
+  host: null,
+  avatarUrl: 'https://misskey.backspace.fm/identicon/akeome@misskey.backspace.fm',
+  avatarBlurhash: null,
+  isBot: true,
+  isCat: false,
+  emojis: {},
+  onlineStatus: 'online',
+  badgeRoles: [],
+  url: null,
+  uri: null,
+  movedTo: null,
+  alsoKnownAs: null,
+  createdAt: '2023-08-04T13:49:29.327Z',
+  updatedAt: '2023-11-02T21:01:34.367Z',
+  lastFetchedAt: null,
+  bannerUrl: null,
+  bannerBlurhash: null,
+  isLocked: false,
+  isSilenced: false,
+  isSuspended: false,
+  description: '毎日0:00に開かれる時間競技を観測するためのbotです。\\n**/follow**でこちらからフォローします。',
+  location: null,
+  birthday: null,
+  lang: 'ja',
+  fields: [
+    {
+      name: '集計ワード',
+      value: '"あけおめ","あけましておめでとうございます",":akeome:",":sakibashiri_oniichan_ni_akeome_shite_agerunoha_atashi_kurai_desho_heart:","はるさめずるずるひょるひょるほほほー",":harusame_zuruzuru:"',
+    },
+    {
+      name: '集計に使わせていただいております',
+      value: 'https://github.com/taichanNE30/yamag',
+    },
+    {
+      name: '集計部分の制作者',
+      value: '@taichan',
+    },
+    {
+      name: '中の人',
+      value: '@mirashiya37',
+    },
+  ],
+  verifiedLinks: [],
+  followersCount: 70,
+  followingCount: 61,
+  notesCount: 593,
+  pinnedNoteIds: [],
+  pinnedNotes: [],
+  pinnedPageId: null,
+  pinnedPage: null,
+  publicReactions: true,
+  ffVisibility: 'public',
+  twoFactorEnabled: false,
+  usePasswordLessLogin: false,
+  securityKeys: false,
+  roles: [
+    {
+      id: '9gvf639rj8',
+      name: '一期生',
+      color: null,
+      iconUrl: null,
+      description: '',
+      isModerator: false,
+      isAdministrator: false,
+      displayOrder: 0,
+    },
+  ],
+  memo: null,
+  isFollowing: false,
+  isFollowed: false,
+  hasPendingFollowRequestFromYou: false,
+  hasPendingFollowRequestToYou: false,
+  isBlocking: false,
+  isBlocked: false,
+  isMuted: false,
+  isRenoteMuted: false,
+  notify: 'none',
+}
+
+'''));
 
   // カスタム絵文字
   static UnicodeEmojiData unicodeEmoji1 = const UnicodeEmojiData(char: "♥");

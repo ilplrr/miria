@@ -7,7 +7,7 @@ import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/misskey_notes/network_image.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
-class AvatarIcon extends StatelessWidget {
+class AvatarIcon extends StatefulWidget {
   final User user;
   final double height;
   final VoidCallback? onTap;
@@ -26,6 +26,7 @@ class AvatarIcon extends StatelessWidget {
         username: response.username,
         avatarUrl: response.avatarUrl,
         avatarBlurhash: response.avatarBlurhash,
+        avatarDecorations: response.avatarDecorations,
         isCat: response.isCat,
         isBot: response.isBot,
       ),
@@ -43,6 +44,7 @@ class AvatarIcon extends StatelessWidget {
         username: response.username,
         avatarUrl: response.avatarUrl,
         avatarBlurhash: response.avatarBlurhash,
+        avatarDecorations: response.avatarDecorations,
         isCat: response.isCat,
         isBot: response.isBot,
       ),
@@ -50,9 +52,16 @@ class AvatarIcon extends StatelessWidget {
     );
   }
 
+  @override
+  State<StatefulWidget> createState() => AvatarIconState();
+}
+
+class AvatarIconState extends State<AvatarIcon> {
+  Color? catEarColor;
+
   Color? averageColor() {
     // https://github.com/woltapp/blurhash/blob/master/Algorithm.md
-    final blurhash = user.avatarBlurhash;
+    final blurhash = widget.user.avatarBlurhash;
     if (blurhash == null) {
       return null;
     }
@@ -68,77 +77,108 @@ class AvatarIcon extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    catEarColor = (widget.user.isCat ? averageColor() : null);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final catEarColor =
-        (user.isCat ? averageColor() : null) ?? Theme.of(context).primaryColor;
+    final baseHeight = MediaQuery.textScalerOf(context).scale(widget.height);
 
     return GestureDetector(
-      onTap: onTap ??
+      onTap: widget.onTap ??
           () {
             context.pushRoute(
-              UserRoute(userId: user.id, account: AccountScope.of(context)),
+              UserRoute(
+                  userId: widget.user.id, account: AccountScope.of(context)),
             );
           },
       child: Padding(
-        padding: const EdgeInsets.only(top: 3),
+        padding: EdgeInsets.only(
+          top: 3,
+          left: MediaQuery.textScalerOf(context).scale(15),
+          right: MediaQuery.textScalerOf(context).scale(5),
+        ),
         child: Stack(
           children: [
-            if (user.isCat)
+            if (widget.user.isCat)
               Positioned(
                 left: 0,
                 top: 0,
-                width: height * MediaQuery.of(context).textScaleFactor,
-                height: height * MediaQuery.of(context).textScaleFactor,
+                width: baseHeight,
+                height: baseHeight,
                 child: Transform.rotate(
                   angle: -0 * pi / 180,
                   child: Transform.translate(
                     offset: Offset(
-                      -height * 0.333 * MediaQuery.of(context).textScaleFactor,
-                      -height * 0.3 * MediaQuery.of(context).textScaleFactor,
+                      -baseHeight * 0.333,
+                      -baseHeight * 0.3,
                     ),
                     child: Icon(
                       Icons.play_arrow_rounded,
-                      color: catEarColor,
-                      size: height * 1 * MediaQuery.of(context).textScaleFactor,
+                      color: catEarColor ?? Theme.of(context).primaryColor,
+                      size: baseHeight,
                     ),
                   ),
                 ),
               ),
-            if (user.isCat)
+            if (widget.user.isCat)
               Positioned(
                 left: 0,
                 top: 0,
-                width: height * MediaQuery.of(context).textScaleFactor,
-                height: height * MediaQuery.of(context).textScaleFactor,
+                width: baseHeight,
+                height: baseHeight,
                 child: Transform.translate(
                   offset: Offset(
-                    height * 1.333 * MediaQuery.of(context).textScaleFactor,
-                    -height * 0.3 * MediaQuery.of(context).textScaleFactor,
+                    baseHeight * 1.333,
+                    -baseHeight * 0.3,
                   ),
                   child: Transform(
                     transform: Matrix4.rotationY(pi),
                     child: Icon(
                       Icons.play_arrow_rounded,
-                      color: catEarColor,
-                      size: height * 1 * MediaQuery.of(context).textScaleFactor,
+                      color: catEarColor ?? Theme.of(context).primaryColor,
+                      size: baseHeight,
                     ),
                   ),
                 ),
               ),
             ClipRRect(
-              borderRadius: BorderRadius.circular(
-                height * MediaQuery.of(context).textScaleFactor,
-              ),
+              borderRadius: BorderRadius.circular(baseHeight),
               child: SizedBox(
-                width: height * MediaQuery.of(context).textScaleFactor,
-                height: height * MediaQuery.of(context).textScaleFactor,
+                width: baseHeight,
+                height: baseHeight,
                 child: NetworkImageView(
                   fit: BoxFit.cover,
-                  url: user.avatarUrl.toString(),
+                  url: widget.user.avatarUrl.toString(),
                   type: ImageType.avatarIcon,
                 ),
               ),
             ),
+            for (final decoration in widget.user.avatarDecorations)
+              Transform.scale(
+                  scaleX: 2,
+                  scaleY: 2,
+                  child: Transform.rotate(
+                    angle: (decoration.angle ?? 0) * 2 * pi,
+                    alignment: Alignment.center,
+                    child: decoration.flipH
+                        ? Transform.flip(
+                            flipX: true,
+                            child: SizedBox(
+                              width: baseHeight,
+                              child: NetworkImageView(
+                                  url: decoration.url, type: ImageType.other),
+                            ),
+                          )
+                        : SizedBox(
+                            width: baseHeight,
+                            child: NetworkImageView(
+                                url: decoration.url,
+                                type: ImageType.avatarDecoration)),
+                  )),
           ],
         ),
       ),

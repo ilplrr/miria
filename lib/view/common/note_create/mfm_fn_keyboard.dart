@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/text_editing_controller_extension.dart';
 import 'package:miria/model/input_completion_type.dart';
+import 'package:miria/view/common/date_time_picker.dart';
 import 'package:miria/view/common/note_create/basic_keyboard.dart';
 import 'package:miria/view/common/note_create/custom_keyboard_button.dart';
 import 'package:miria/view/common/note_create/input_completation.dart';
@@ -25,8 +26,10 @@ const mfmFn = [
   "font",
   "blur",
   "rainbow",
-  // "sparkle",
+  "sparkle",
   "rotate",
+  "ruby",
+  "unixtime"
 ];
 
 final _filteredMfmFnProvider = Provider.autoDispose<List<String>>((ref) {
@@ -43,16 +46,31 @@ class MfmFnKeyboard extends ConsumerWidget {
     super.key,
     required this.controller,
     required this.focusNode,
+    required this.parentContext,
   });
 
   final TextEditingController controller;
   final FocusNode focusNode;
+  final BuildContext parentContext;
 
-  void insertMfmFn(String mfmFn) {
+  Future<void> insertMfmFn(String mfmFn) async {
     final textBeforeSelection = controller.textBeforeSelection;
     final lastOpenTagIndex = textBeforeSelection!.lastIndexOf(r"$[");
     final queryLength = textBeforeSelection.length - lastOpenTagIndex - 2;
     controller.insert("${mfmFn.substring(queryLength)} ");
+    if (mfmFn == "unixtime") {
+      final resultDate = await showDateTimePicker(
+        context: parentContext,
+        firstDate: DateTime.utc(-271820, 12, 31),
+        initialDate: DateTime.now(),
+        lastDate: DateTime.utc(275760, 9, 13),
+      );
+      if (resultDate == null) return;
+
+      final unixtime = resultDate.millisecondsSinceEpoch ~/ 1000;
+
+      controller.insert("$unixtime");
+    }
     focusNode.requestFocus();
   }
 
