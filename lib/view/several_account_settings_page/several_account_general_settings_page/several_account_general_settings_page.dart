@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mfm_renderer/mfm_renderer.dart';
+import 'package:mfm/mfm.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/account_settings.dart';
 import 'package:miria/providers.dart';
@@ -29,6 +29,7 @@ class SeveralAccountGeneralSettingsPageState
   var defaultNoteVisibility = NoteVisibility.public;
   ReactionAcceptance? defaultReactionAppearance;
   AccountSettings? accountSettings;
+  var forceShowAd = false;
 
   @override
   void didChangeDependencies() {
@@ -42,24 +43,29 @@ class SeveralAccountGeneralSettingsPageState
               element.host == widget.account.host);
       if (loadedSettings != null) {
         accountSettings = loadedSettings;
+        if (!mounted) return;
         setState(() {
           defaultIsLocalOnly = loadedSettings.defaultIsLocalOnly;
           defaultNoteVisibility = loadedSettings.defaultNoteVisibility;
           defaultReactionAppearance = loadedSettings.defaultReactionAcceptance;
+          forceShowAd = loadedSettings.forceShowAd;
         });
       }
     });
   }
 
   Future<void> save() async {
-    await ref.read(accountSettingsRepositoryProvider).save(AccountSettings(
-          userId: widget.account.userId,
-          host: widget.account.host,
-          reactions: accountSettings?.reactions ?? [],
-          defaultNoteVisibility: defaultNoteVisibility,
-          defaultIsLocalOnly: defaultIsLocalOnly,
-          defaultReactionAcceptance: defaultReactionAppearance,
-        ));
+    await ref.read(accountSettingsRepositoryProvider).save(
+          AccountSettings(
+            userId: widget.account.userId,
+            host: widget.account.host,
+            reactions: accountSettings?.reactions ?? [],
+            defaultNoteVisibility: defaultNoteVisibility,
+            defaultIsLocalOnly: defaultIsLocalOnly,
+            defaultReactionAcceptance: defaultReactionAppearance,
+            forceShowAd: forceShowAd,
+          ),
+        );
   }
 
   @override
@@ -138,6 +144,19 @@ class SeveralAccountGeneralSettingsPageState
                                 save();
                               });
                             }),
+                        const Padding(padding: EdgeInsets.only(top: 10)),
+                        const Text("広告"),
+                        CheckboxListTile(
+                          value: forceShowAd,
+                          title: const Text("広告を常に表示する"),
+                          enabled: widget.account.i.policies.canHideAds,
+                          onChanged: (value) => setState(
+                            () {
+                              forceShowAd = value ?? false;
+                              save();
+                            },
+                          ),
+                        ),
                       ],
                     ),
                   ),

@@ -24,9 +24,13 @@ import 'package:miria/repository/tab_settings_repository.dart';
 import 'package:miria/repository/time_line_repository.dart';
 import 'package:miria/repository/user_list_time_line_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:miria/state_notifier/antenna_page/antennas_notifier.dart';
+import 'package:miria/state_notifier/clip_list_page/clips_notifier.dart';
+import 'package:miria/state_notifier/common/misskey_notes/misskey_note_notifier.dart';
 import 'package:miria/state_notifier/common/misskey_server_list_notifier.dart';
 import 'package:miria/state_notifier/note_create_page/note_create_state_notifier.dart';
 import 'package:miria/state_notifier/photo_edit_page/photo_edit_state_notifier.dart';
+import 'package:miria/state_notifier/user_list_page/users_lists_notifier.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
@@ -40,6 +44,11 @@ final misskeyProvider = Provider.family<Misskey, Account>(
     socketConnectionTimeout: const Duration(seconds: 20),
   ),
 );
+final misskeyWithoutAccountProvider = Provider.family<Misskey, String>(
+    (ref, host) => Misskey(
+        host: host,
+        token: null,
+        socketConnectionTimeout: const Duration(seconds: 20)));
 
 final localTimeLineProvider =
     ChangeNotifierProvider.family<TimelineRepository, TabSetting>(
@@ -53,7 +62,7 @@ final localTimeLineProvider =
     ref.read(generalSettingsRepositoryProvider),
     tabSetting,
     ref.read(mainStreamRepositoryProvider(account)),
-    ref.read(accountRepository),
+    ref.read(accountRepositoryProvider.notifier),
     ref.read(emojiRepositoryProvider(account)),
   );
 });
@@ -70,7 +79,7 @@ final homeTimeLineProvider =
     ref.read(generalSettingsRepositoryProvider),
     tabSetting,
     ref.read(mainStreamRepositoryProvider(account)),
-    ref.read(accountRepository),
+    ref.read(accountRepositoryProvider.notifier),
     ref.read(emojiRepositoryProvider(account)),
   );
 });
@@ -100,7 +109,7 @@ final hybridTimeLineProvider =
     ref.read(generalSettingsRepositoryProvider),
     tabSetting,
     ref.read(mainStreamRepositoryProvider(account)),
-    ref.read(accountRepository),
+    ref.read(accountRepositoryProvider.notifier),
     ref.read(emojiRepositoryProvider(account)),
   );
 });
@@ -117,7 +126,7 @@ final roleTimelineProvider =
     ref.read(generalSettingsRepositoryProvider),
     tabSetting,
     ref.read(mainStreamRepositoryProvider(account)),
-    ref.read(accountRepository),
+    ref.read(accountRepositoryProvider.notifier),
     ref.read(emojiRepositoryProvider(account)),
   );
 });
@@ -134,7 +143,7 @@ final channelTimelineProvider =
     ref.read(generalSettingsRepositoryProvider),
     tabSetting,
     ref.read(mainStreamRepositoryProvider(account)),
-    ref.read(accountRepository),
+    ref.read(accountRepositoryProvider.notifier),
     ref.read(emojiRepositoryProvider(account)),
   );
 });
@@ -151,7 +160,7 @@ final userListTimelineProvider =
     ref.read(generalSettingsRepositoryProvider),
     tabSetting,
     ref.read(mainStreamRepositoryProvider(account)),
-    ref.read(accountRepository),
+    ref.read(accountRepositoryProvider.notifier),
     ref.read(emojiRepositoryProvider(account)),
   );
 });
@@ -168,7 +177,7 @@ final antennaTimelineProvider =
     ref.read(generalSettingsRepositoryProvider),
     tabSetting,
     ref.read(mainStreamRepositoryProvider(account)),
-    ref.read(accountRepository),
+    ref.read(accountRepositoryProvider.notifier),
     ref.read(emojiRepositoryProvider(account)),
   );
 });
@@ -179,7 +188,7 @@ final mainStreamRepositoryProvider =
             ref.read(misskeyProvider(account)),
             ref.read(emojiRepositoryProvider(account)),
             account,
-            ref.read(accountRepository)));
+            ref.read(accountRepositoryProvider.notifier)));
 
 final favoriteProvider = ChangeNotifierProvider.autoDispose
     .family<FavoriteRepository, Account>((ref, account) => FavoriteRepository(
@@ -198,15 +207,27 @@ final emojiRepositoryProvider = Provider.family<EmojiRepository, Account>(
         accountSettingsRepository:
             ref.read(accountSettingsRepositoryProvider)));
 
-final accountRepository = ChangeNotifierProvider((ref) => AccountRepository(
-    ref.read(tabSettingsRepositoryProvider),
-    ref.read(accountSettingsRepositoryProvider),
-    ref.read));
+final accountRepositoryProvider =
+    NotifierProvider<AccountRepository, List<Account>>(AccountRepository.new);
 
-final accountProvider = Provider.family<Account, Acct>((ref, acct) {
-  final repository = ref.watch(accountRepository);
-  return repository.account.firstWhere((element) => element.acct == acct);
+final accountsProvider =
+    Provider<List<Account>>((ref) => ref.watch(accountRepositoryProvider));
+
+final iProvider = Provider.family<IResponse, Acct>((ref, acct) {
+  final accounts = ref.watch(accountsProvider);
+  final account = accounts.firstWhere((account) => account.acct == acct);
+  return account.i;
 });
+
+final accountProvider = Provider.family<Account, Acct>(
+  (ref, acct) => ref.watch(
+    accountsProvider.select(
+      (accounts) => accounts.firstWhere(
+        (account) => account.acct == acct,
+      ),
+    ),
+  ),
+);
 
 final tabSettingsRepositoryProvider =
     ChangeNotifierProvider((ref) => TabSettingsRepository());
@@ -260,3 +281,21 @@ final misskeyServerListNotifierProvider = AsyncNotifierProvider.autoDispose<
 );
 
 final cacheManagerProvider = Provider<BaseCacheManager?>((ref) => null);
+
+final misskeyNoteNotifierProvider =
+    NotifierProvider.family<MisskeyNoteNotifier, void, Account>(
+  MisskeyNoteNotifier.new,
+);
+
+final usersListsNotifierProvider = AsyncNotifierProvider.autoDispose
+    .family<UsersListsNotifier, List<UsersList>, Misskey>(
+  UsersListsNotifier.new,
+);
+
+final antennasNotifierProvider = AsyncNotifierProvider.autoDispose
+    .family<AntennasNotifier, List<Antenna>, Misskey>(
+  AntennasNotifier.new,
+);
+
+final clipsNotifierProvider = AsyncNotifierProvider.autoDispose
+    .family<ClipsNotifier, List<Clip>, Misskey>(ClipsNotifier.new);

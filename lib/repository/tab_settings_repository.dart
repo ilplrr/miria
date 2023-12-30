@@ -1,8 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:miria/model/account.dart';
+import 'package:miria/model/tab_icon.dart';
 import 'package:miria/model/tab_setting.dart';
+import 'package:miria/model/tab_type.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TabSettingsRepository extends ChangeNotifier {
@@ -40,5 +43,31 @@ class TabSettingsRepository extends ChangeNotifier {
     _tabSettings.removeWhere((tabSetting) => tabSetting.acct == account.acct);
     await save(_tabSettings);
     notifyListeners();
+  }
+
+  Future<void> initializeTabSettings(Account account) async {
+    await save([
+      ..._tabSettings,
+      TabSetting(
+        icon: TabIcon(codePoint: Icons.home.codePoint),
+        tabType: TabType.homeTimeline,
+        name: "ホームタイムライン",
+        acct: account.acct,
+      ),
+      if (account.i.policies.ltlAvailable)
+        TabSetting(
+          icon: TabIcon(codePoint: Icons.public.codePoint),
+          tabType: TabType.localTimeline,
+          name: "ローカルタイムライン",
+          acct: account.acct,
+        ),
+      if (account.i.policies.gtlAvailable)
+        TabSetting(
+          icon: TabIcon(codePoint: Icons.rocket_launch.codePoint),
+          tabType: TabType.globalTimeline,
+          name: "グローバルタイムライン",
+          acct: account.acct,
+        ),
+    ]);
   }
 }

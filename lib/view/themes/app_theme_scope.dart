@@ -29,6 +29,7 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
     required String fantasyFontName,
   }) {
     return AppThemeData(
+      colorTheme: theme,
       isDarkMode: theme.isDarkTheme,
       noteTextStyle: const InputDecoration(),
       reactionButtonStyle: ElevatedButton.styleFrom(
@@ -51,7 +52,7 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
           ? (fromGoogleFont(fantasyFontName) ?? const TextStyle())
           : const TextStyle(),
       reactionButtonBackgroundColor: theme.buttonBackground,
-      reactionButtonMeReactedColor: theme.primary,
+      reactionButtonMeReactedColor: theme.accentedBackground,
       renoteBorderColor: theme.renote,
       renoteBorderRadius: const Radius.circular(20),
       renoteStrokeWidth: 1.5,
@@ -60,12 +61,6 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
       buttonBackground: theme.buttonBackground,
       currentDisplayTabColor:
           theme.isDarkTheme ? theme.primaryDarken : theme.primaryLighten,
-      voteColor1: theme.isDarkTheme
-          ? theme.primaryLighten.lighten()
-          : theme.primaryDarken.darken(),
-      voteColor2: theme.isDarkTheme
-          ? theme.primaryDarken.darken()
-          : theme.primaryLighten.lighten(),
       unicodeEmojiStyle: resolveUnicodeEmojiStyle(),
     );
   }
@@ -215,6 +210,7 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
       primaryColor: theme.primary,
       primaryColorDark: theme.primaryDarken,
       primaryColorLight: theme.primaryLighten,
+      dividerColor: theme.divider,
       appBarTheme: AppBarTheme(
         elevation: 0,
         titleSpacing: 0,

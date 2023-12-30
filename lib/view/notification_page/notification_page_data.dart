@@ -93,6 +93,15 @@ class NoteNotification extends NotificationData {
   });
 }
 
+class RoleNotification extends NotificationData {
+  final RolesListResponse? role;
+  RoleNotification({
+    required this.role,
+    required super.createdAt,
+    required super.id,
+  });
+}
+
 extension INotificationsResponseExtension on Iterable<INotificationsResponse> {
   List<NotificationData> toNotificationData() {
     final resultList = <NotificationData>[];
@@ -214,12 +223,21 @@ extension INotificationsResponseExtension on Iterable<INotificationsResponse> {
         case NotificationType.test:
           resultList.add(SimpleNotificationData(
               text: "テストやで", createdAt: element.createdAt, id: element.id));
+          break;
 
         case NotificationType.note:
           resultList.add(NoteNotification(
               note: element.note,
               createdAt: element.createdAt,
               id: element.id));
+          break;
+
+        case NotificationType.roleAssigned:
+          resultList.add(RoleNotification(
+              role: element.role,
+              createdAt: element.createdAt,
+              id: element.id));
+          break;
 
         default:
           break;
